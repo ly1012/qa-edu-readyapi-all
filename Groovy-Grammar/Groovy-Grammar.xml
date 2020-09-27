@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="b4e1eaaa-7b28-4049-a374-07f329f3100a" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Groovy Grammar" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="b4e1eaaa-7b28-4049-a374-07f329f3100afileName">Groovy-Grammar</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="groovy" name="data" id="ffe83814-1b85-498f-98f5-d113cfed74f7" disabled="true">
+    <con:settings/>
+    <con:config>
+      <script>return '''{
+	"china":"中国",
+	"hongkong":"香港"
+}
+'''</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="String" id="76b502e3-85a5-491e-ad46-0ed1d3c6cba2">
+    <con:settings/>
+    <con:config>
+      <script>import groovy.json.JsonSlurper
+
+//=========== 准备代码  =============
+//运行测试步骤：produce data
+testRunner.runTestStepByName("data")
+
+//===========  知识点 ===============
+//三个双引号：如果字符串中有插值表达式 ${XX}，但不想被解释为表达式值，需要使用 \ 进行转义，而且每个 $ 都需要转义
+//注意：如果 JSON Key 的 value 为字符串类型，需要使用双引号包裹，表示是字符串，否则 json 解析会出错
+def jsonStr = """{
+"china":"\${data#result#\$.china}",
+"age":5000
+}"""
+
+//============  测试验证代码  =============
+def slurper = new JsonSlurper()
+def jsonobj = slurper.parseText(jsonStr)
+print(jsonobj.china)
+print(context.expand(jsonobj.china))
+print(jsonobj.age)
+
+//定义一个日志打印方法
+void print(str){
+	log.info "   "+str
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>ffe83814-1b85-498f-98f5-d113cfed74f7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

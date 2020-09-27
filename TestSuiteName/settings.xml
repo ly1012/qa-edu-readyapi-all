@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testSuite id="ae5fc6cc-27b3-4791-b1f0-353fbe897be0" name="TestSuiteName" xmlns:con="http://eviware.com/soapui/config">
+  <con:description>仅作为其他教学实例的演示数据，本测试套件中没有知识点。</con:description>
+  <con:settings>
+    <con:setting id="ae5fc6cc-27b3-4791-b1f0-353fbe897be0fileName">TestSuiteName</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:runType>SEQUENTIAL</con:runType>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testSuite>

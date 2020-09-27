@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testSuite id="36d706ed-501c-41dd-a214-dbd1390ea9a2" name="Groovy Grammar" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="36d706ed-501c-41dd-a214-dbd1390ea9a2fileName">Groovy-Grammar</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:runType>SEQUENTIAL</con:runType>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testSuite>

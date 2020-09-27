@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="31c50392-6fa0-4c49-9435-ef64c5bac45e" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Groovy Script Step" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:description>有两个地方需要设置（File - Preferences - ReadyAPI ）：
+- Script library（Groovy 脚本库，路径为包所在文件夹路径，比如 com 文件夹所在文件夹路径）
+- Custom Java libraries(requires restart)（额外的 Jar 包路径）</con:description>
+  <con:settings>
+    <con:setting id="31c50392-6fa0-4c49-9435-ef64c5bac45efileName">Groovy-Script-Step</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="groovy" name="variables - context" id="7d010ad7-06d4-4338-a77c-080e49bc20ce">
+    <con:settings/>
+    <con:config>
+      <script>/**
+ * ReadyAPI Groovy Script 步骤内置变量 context
+ */
+
+
+//============   expand 方法  ===============
+//场景1：运行代码（参数中可以写代码，导入类、调用方法）
+//Person 类代码请下载： https://github.com/ly1012/atool-groovy
+def b = context.expand('${=import org.qadoc.atool.groovy.edu.Person;def a = new Person();a.say()}')
+log.info b
+
+//场景2：获取步骤返回值
+//运行测试步骤：produce data
+testRunner.runTestStepByName("produce data")
+//获取 produce data 步骤的返回值并通过 JsonPath 获取指定值
+log.info context.expand('${produce data#result#$.china}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="variables - testRunner - testCase" id="8078ca1c-8c15-4738-81bb-ae785264492b">
+    <con:settings/>
+    <con:config>
+      <script>/**
+ * ReadyAPI 内置变量 testRunner 
+ */
+
+// =============    测试用例   ================
+
+//获取当前测试用例
+def testcase = testRunner.testCase
+log.info testcase.name
+
+//设置测试用例的属性：属性名称 属性值
+testRunner.testCase.setPropertyValue("token","mytoken")
+//读取测试用例的属性：属性名称
+log.info testRunner.testCase.getPropertyValue("token")
+
+//获取其他测试套件的测试用例对象
+def testcase_other = testRunner.testCase.testSuite.project.getTestSuiteByName('TestSuiteName').getTestCaseByName('TestCaseName')
+log.info testcase_other.getName()</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="variables - testRunner - runTestStepByName" id="5f4b9892-ffe7-453e-8d36-b1408c7748c9">
+    <con:settings/>
+    <con:config>
+      <script>/**
+ * 在 Groovy Step 中运行其他步骤并获取步骤运行结果
+ */
+
+import groovy.json.JsonSlurper
+
+//声明一个json字符串解析对象
+def slurper = new JsonSlurper()
+
+//运行后面的测试步骤并获取返回数据
+def msgs = testRunner.runTestStepByName("produce data").getMessages()
+
+//处理返回数据
+//打印消息数组长度
+log.info msgs.length
+//遍历消息数组
+for(msg in msgs){
+	log.info msg
+}
+//获取Step2的返回值中的数据
+msgjson = slurper.parseText(msgs[0].replace("Script-result: ",""))
+log.info msgjson.china</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="dynamic load script library" id="3e667bf5-d24c-44b0-8fc2-a11b7fa867b8">
+    <con:settings/>
+    <con:config>
+      <script>/**
+ * 动态加载 Groovy 库
+ */
+
+//获取当前项目对象
+def project =  testRunner.testCase.testSuite.project
+//加载新的 Groovy Script 库，加载后之前的 Groovy 脚本库还在（如何卸载？）
+project.scriptLibrary = "F:\\workspace\\code\\private\\ly1012\\atool-groovy\\src\\main\\groovy"
+log.info project.scriptLibrary
+
+//是否需要等待加载完成？未测试。
+//Thread.sleep(3000)
+
+//调用新脚本库的方法
+log.info org.qadoc.atool.groovy.TG.random.getID_U32()</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="produce data" id="894ccc0b-fc64-4694-b993-695fd7e8eb31" disabled="true">
+    <con:settings/>
+    <con:config>
+      <script>return '''{
+	"china":"中国",
+	"hongkong":"香港"
+}
+'''</script>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>token</con:name>
+      <con:value>mytoken</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>8078ca1c-8c15-4738-81bb-ae785264492b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>5f4b9892-ffe7-453e-8d36-b1408c7748c9</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>
